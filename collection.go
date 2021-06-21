@@ -44,6 +44,26 @@ func Contains(collect interface{}, target interface{}) (bool, int) {
 	return false, -1
 }
 
+// AllEqual check every element in the collect is equal to target
+// when collect is nil or empty will return false
+func AllEqual(collect interface{}, target interface{}) bool {
+	collValue := reflect.ValueOf(collect)
+	if !collValue.IsValid() {
+		return false
+	}
+	switch reflect.TypeOf(collect).Kind() {
+	case reflect.Array, reflect.Slice:
+			for i := 0; i < collValue.Len(); i++ {
+				if target == collValue.Index(i).Interface() {
+					return true
+				}
+			}
+	default:
+		panic(fmt.Sprintf("unsupport collect type of %s", reflect.TypeOf(target).Kind()))
+	}
+	return false
+}
+
 // IsEmpty check whether the following types are empty
 // string array slice nil
 func IsEmpty(target interface{}) bool {
